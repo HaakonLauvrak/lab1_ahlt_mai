@@ -6,11 +6,6 @@ from extract_features import extract_features
 from train import train
 from predict import predict
 
-# Add the Lab1 directory to the Python path
-current_dir = os.path.dirname(os.path.abspath(__file__))  # Gets 1.NER-ML directory
-parent_dir = os.path.dirname(current_dir)  # Gets Lab1 directory
-sys.path.insert(0, parent_dir)
-
 ##########################################################
 #
 #  This script allows to run a series of experiments
@@ -63,7 +58,7 @@ DATADIR=os.path.join(MAINDIR,"data") # down to "data"
 UTILDIR=os.path.join(MAINDIR,"util") # down to "util"
 
 sys.path.append(UTILDIR)
-from util.evaluator import evaluate
+from evaluator import evaluate
 
 # extract training hyperparameters from command line
 print("read params")
@@ -95,13 +90,13 @@ if "extract" in sys.argv[1:] :
 # for each required model, see if training or prediction are required
 for model in ["CRF", "SVM", "MEM"] :
     if model not in sys.argv[1:] : continue
-   
+
     if "train" in sys.argv[1:] :
         os.makedirs(os.path.join(NERDIR,"models"), exist_ok=True)
         # train model
         print(f"Training {model} model...")
         train(os.path.join(NERDIR,"preprocessed","train.feat"), params,
-              os.path.join(NERDIR,"models","model."+model))
+              os.path.join(NERDIR,"models","model."+ model.lower()))
         
     if "predict" in sys.argv[1:] :    
         os.makedirs(os.path.join(NERDIR,"results"), exist_ok=True)
