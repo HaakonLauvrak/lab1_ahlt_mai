@@ -1,0 +1,28 @@
+FEAT1PARAM1 Iteration
+
+Notes: Struggel to get everything to run because "å" in path to repo
+
+
+FEAT2PARAM1
+
+Notes: Check if the token is all upper or starts with upper. Also check if next or previous token is all upper
+
+
+FEAT3PARAM1 
+
+Notes: Check if a token has starts with capital letter but is not the first word in sentence
+
+FEAT4PARAM1
+
+Notes: Check if mice, mouse, rat or rats are in the sentence
+
+FEAT5PARAM1
+
+Notes: Mice, mouse, rats was not sucessfull. Therefore remove this.
+
+FEAT6PARAM1
+
+Notes: Extracted all the known brands, drugs, drug_ns and gruops fdrom the training data and make feat to check if a token is in there
+Result: First time getting an actual big increase
+
+PLAN: CHECK THE PREV AND NEXT WORD IS IN LIST

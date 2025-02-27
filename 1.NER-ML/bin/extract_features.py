@@ -30,6 +30,7 @@ def extract_sentence_features(tokens) :
       #tag = tk.tag_   # finer PoS. E.g.:  NN (noun singular), NNS (noun plural), 
                        # VB (verb), VBS (verb 3rd person), VBD (verb past tense), ... 
 
+
       tokenFeatures.append("form="+t)
       tokenFeatures.append("suf3="+t[-3:])
 
@@ -46,6 +47,58 @@ def extract_sentence_features(tokens) :
          tokenFeatures.append("suf3Next="+tNext[-3:])
       else:
          tokenFeatures.append("EoS")
+
+      ### MY FEATURES ###
+
+      #Is token all uppercase?
+      if t.isupper():
+         tokenFeatures.append("isAllUpper")
+      
+      #Does token start with a capital letter?
+      if t[0].isupper():
+         tokenFeatures.append("isCapital")
+
+      #Is previous token all upper
+      if i>0:
+         tPrev = tokens[i-1].text
+         if tPrev.isupper():
+            tokenFeatures.append("isPrevAllUpper")
+      
+      #Is next token all upper
+      if i<len(tokens)-1:
+         tNext = tokens[i+1].text
+         if tNext.isupper():
+            tokenFeatures.append("isNextAllUpper")
+      
+      #Is a token that starts with a capital letter and is not first word in sentence
+      if i>0 and t[0].isupper():
+         tokenFeatures.append("isCapitalNotFirst")
+
+      #The first 3 characters of the token
+      tokenFeatures.append("pref3="+t[:3])
+
+      known_brands = read_file_to_list("lists/brand.txt")
+      known_drugs = read_file_to_list("lists/drug.txt")
+      known_groups = read_file_to_list("lists/group.txt")
+      known_drug_n = read_file_to_list("lists/drug_n.txt")
+
+      #Is token in list of known brands
+      if t in known_brands:
+         tokenFeatures.append("isBrand")
+      
+      #Is token in list of known drugs
+      if t in known_drugs:
+         tokenFeatures.append("isDrug")
+      
+      #Is token in list of known groups
+      if t in known_groups:
+         tokenFeatures.append("isGroup")
+
+      #Is token in list of known drug_n
+      if t in known_drug_n:
+         tokenFeatures.append("isDrug_n")
+
+      
     
       sentenceFeatures[i] = tokenFeatures
     
@@ -116,4 +169,25 @@ if __name__ == "__main__" :
     featfile = sys.argv[2]
     
     extract_features(datafile, featfile)
+
+# Helper functions
+
+def read_file_to_list(filename):
+    entries = []
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            for line in file:
+                # Strip whitespace and add non-empty lines to the list
+                line = line.strip()
+                if line:
+                    entries.append(line)
+    except UnicodeDecodeError:
+        # Try another encoding if UTF-8 fails
+        with open(filename, 'r', encoding='latin-1') as file:
+            for line in file:
+                line = line.strip()
+                if line:
+                    entries.append(line)
+    
+    return entries
 

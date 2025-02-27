@@ -2,6 +2,10 @@
 
 .venv/
 
+results/
+preprocessed/
+models/
+
 # Python cache files
 __pycache__/
 *.py[cod]
