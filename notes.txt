@@ -1,4 +1,0 @@
-uppercase for brand
-mice and rat for animal drug
-first letter uppercase and not first word in sentence
-files with names from training (some names have spaces)

@@ -30,7 +30,6 @@ def extract_sentence_features(tokens) :
       #tag = tk.tag_   # finer PoS. E.g.:  NN (noun singular), NNS (noun plural), 
                        # VB (verb), VBS (verb 3rd person), VBD (verb past tense), ... 
 
-
       tokenFeatures.append("form="+t)
       tokenFeatures.append("suf3="+t[-3:])
 
@@ -57,23 +56,7 @@ def extract_sentence_features(tokens) :
       #Does token start with a capital letter?
       if t[0].isupper():
          tokenFeatures.append("isCapital")
-
-      #Is previous token all upper
-      if i>0:
-         tPrev = tokens[i-1].text
-         if tPrev.isupper():
-            tokenFeatures.append("isPrevAllUpper")
-      
-      #Is next token all upper
-      if i<len(tokens)-1:
-         tNext = tokens[i+1].text
-         if tNext.isupper():
-            tokenFeatures.append("isNextAllUpper")
-      
-      #Is a token that starts with a capital letter and is not first word in sentence
-      if i>0 and t[0].isupper():
-         tokenFeatures.append("isCapitalNotFirst")
-
+   
       #The first 3 characters of the token
       tokenFeatures.append("pref3="+t[:3])
 
@@ -83,24 +66,45 @@ def extract_sentence_features(tokens) :
       known_drug_n = read_file_to_list("lists/drug_n.txt")
 
       #Is token in list of known brands
-      if t in known_brands:
+      if t.lower() in known_brands:
          tokenFeatures.append("isBrand")
       
       #Is token in list of known drugs
-      if t in known_drugs:
+      if t.lower() in known_drugs:
          tokenFeatures.append("isDrug")
       
       #Is token in list of known groups
-      if t in known_groups:
+      if remove_trailing_s(t.lower()) in remove_trailing_s(known_groups):
          tokenFeatures.append("isGroup")
 
       #Is token in list of known drug_n
-      if t in known_drug_n:
+      if t.lower() in known_drug_n:
          tokenFeatures.append("isDrug_n")
 
-      
+      #If the token is a mix of letters and numbers and dashes
+      def has_letter_and_number_or_dash(t):
+         # Check if string has at least one letter
+         has_letter = bool(re.search(r'[a-zA-Z]', t))
+         
+         # Check if string has at least one number
+         has_number = bool(re.search(r'[0-9]', t))
+         
+         # Check if string has at least one dash
+         has_dash = bool(re.search(r'-', t))
+         
+         # Make sure string only contains allowed characters
+         is_alphanumeric_dash = bool(re.match(r'^[a-zA-Z0-9-]+$', t))
+         
+         # Return true if it has at least one letter AND (at least one number OR at least one dash)
+         return is_alphanumeric_dash and has_letter and (has_number or has_dash)
+
+      # Add the check to your feature extraction
+      if has_letter_and_number_or_dash(t):
+         tokenFeatures.append("isAlphaNumDash")
     
       sentenceFeatures[i] = tokenFeatures
+
+
     
    return sentenceFeatures
 
@@ -191,3 +195,7 @@ def read_file_to_list(filename):
     
     return entries
 
+def remove_trailing_s(word):
+    if word and word[-1].lower() == 's':
+        return word[:-1]
+    return word

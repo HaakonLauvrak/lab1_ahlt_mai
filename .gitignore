@@ -5,6 +5,8 @@
 results/
 preprocessed/
 models/
+notes/
+lists/
 
 # Python cache files
 __pycache__/

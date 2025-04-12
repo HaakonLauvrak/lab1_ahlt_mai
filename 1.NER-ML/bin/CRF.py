@@ -24,11 +24,11 @@ class CRF:
         else :  # params given, create new empty model
 
             # extract parameters if provided. Use default if not
-            alg = params['algorithm'] if 'algorithm' in params else 'lbfgs'
-            minf = int(params['feature.minfreq']) if 'feature.minfreq' in params else 1
-            maxit =  int(params['max_iterations']) if 'max_iterations' in params else 9999999
+            alg = params['algorithm'] if 'algorithm' in params else 'pa'
+            minf = int(params['feature.minfreq']) if 'feature.minfreq' in params else 5
+            maxit =  int(params['max_iterations']) if 'max_iterations' in params else 50
             c1 = float(params['c1']) if 'c1' in params else 0.1
-            c2 = float(params['c2']) if 'c2' in params else 1.0
+            c2 = float(params['c2']) if 'c2' in params else 0.3
             eps = float(params['epsilon']) if 'epsilon' in params else 0.00001
             # select needed parametes depending on the agorithm
             params = {'feature.minfreq' : minf, 'max_iterations' : maxit}
